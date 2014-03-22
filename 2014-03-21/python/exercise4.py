@@ -1,0 +1,1 @@
+from pyplasm import *primo_scalino = CUBOID([15,5,1])secondo_scalino = T([2,3])([1,1])(CUBOID([15,4,1]))terzo_scalino = T([2,3])([2,2])(CUBOID([15,3,1]))scalini = T([1,2])([53.5,9])(COLOR([0.46,0.35,0.25])(STRUCT([primo_scalino,secondo_scalino,terzo_scalino])))VIEW(scalini)
