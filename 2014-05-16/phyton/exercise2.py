@@ -54,7 +54,6 @@ hpc = cellNumbering (master,hpc)(range(len(master[1])),CYAN,2)
 #VIEW(hpc)
 
 
-
 #           STANZINO:
 diagramStanzino = assemblyDiagramInit([3,3,2])([[0.3,2,0.1],[0.3,3.6,0.1],[0.3,3]])
 hpcStanzino = SKEL_1(STRUCT(MKPOLS(diagramStanzino)))
@@ -126,7 +125,7 @@ hpcDiagramStanza_3 = cellNumbering (diagramStanza_3,hpcStanza_3)(range(len(CVSta
 
 toMerge = 11
 
-doorStanza_3 = assemblyDiagramInit([3,1,2])([[0.4,0.8,2],[0.1],[2.2,0.5]])
+doorStanza_3 = assemblyDiagramInit([3,1,2])([[0.4,0.5,2],[0.1],[2.2,0.5]])
 masterStanza_3 = diagram2cell(doorStanza_3,diagramStanza_3,toMerge)
 hpc = SKEL_1(STRUCT(MKPOLS(masterStanza_3)))
 hpc = cellNumbering (masterStanza_3,hpc)(range(len(masterStanza_3[1])),CYAN,2)
@@ -215,7 +214,8 @@ masterStanza_1 = masterStanza_1[0], [cell for k,cell in enumerate(masterStanza_1
 
 toMerge = 9
 
-windowStanza_1 = assemblyDiagramInit([3,1,3])([[2,1.6,0.8],[0.3],[0.8,1.6,2]])
+#windowStanza_1 = assemblyDiagramInit([3,1,3])([[2,1.6,0.8],[0.3],[0.8,1.6,2]])
+windowStanza_1 = assemblyDiagramInit([3,1,3])([[1.2,1.6,0.8],[0.3],[2,3.5,2]])
 masterStanza_1 = diagram2cell(windowStanza_1,masterStanza_1,toMerge)
 hpc = SKEL_1(STRUCT(MKPOLS(masterStanza_1)))
 hpc = cellNumbering (masterStanza_1,hpc)(range(len(masterStanza_1[1])),CYAN,2)
@@ -322,12 +322,68 @@ master = master[0], [cell for k,cell in enumerate(master[1]) if not (k in toRemo
 
 CREA_MODELLO = COMP([STRUCT,MKPOLS])
 modelloPiano = CREA_MODELLO(master)
+#VIEW(modelloPiano)
 
 
 
+#       PORTA DI INGRESSO
+
+porta = COLOR([0.58823529411,0.29411764705,0])(CUBOID([1,0.15,1.5]))
+
+linea0 = T([1,2])([0,-0.01])(COLOR(BLACK)(CUBOID([0.05,0.03,1.5])))
+linea1 = T([1,2])([0.1,-0.01])(COLOR(BLACK)(CUBOID([0.05,0.03,1.5])))
+linea2 = T([1,2])([0.2,-0.01])(COLOR(BLACK)(CUBOID([0.05,0.03,1.5])))
+linea3 = T([1,2])([0.3,-0.01])(COLOR(BLACK)(CUBOID([0.05,0.03,1.5])))
+linea4 = T([1,2])([0.4,-0.01])(COLOR(BLACK)(CUBOID([0.05,0.03,1.5])))
+linea5 = T([1,2])([0.5,-0.01])(COLOR(BLACK)(CUBOID([0.05,0.03,1.5])))
+linea6 = T([1,2])([0.6,-0.01])(COLOR(BLACK)(CUBOID([0.05,0.03,1.5])))
+linea7 = T([1,2])([0.7,-0.01])(COLOR(BLACK)(CUBOID([0.05,0.03,1.5])))
+linea8 = T([1,2])([0.8,-0.01])(COLOR(BLACK)(CUBOID([0.05,0.03,1.5])))
+linea9 = T([1,2])([0.9,-0.01])(COLOR(BLACK)(CUBOID([0.05,0.03,1.5])))
+primoPezzoManiglia = T([1,2,3])([0.9,-0.1,0.95])(CUBOID([0.03,0.1,0.03]))
+
+secondoPezzoManiglia = T([1,2,3])([0.75,-0.1,0.95])(CUBOID([0.2,0.03,0.03]))
+maniglia = STRUCT([primoPezzoManiglia,secondoPezzoManiglia])
+maniglia = COLOR([0.8,0.4,0])(maniglia)
+
+portaIngresso = STRUCT([porta,linea0,linea1,linea2,linea3,linea4,linea5,linea6,linea7,linea8,linea9,maniglia])
+portaIngresso = T([1,2,3])([0.1,4.9,0.57])(S(3)(1.5)(R([1,2])(-PI/2)(portaIngresso)))
+
+#VIEW(STRUCT([modelloPiano,portaIngresso]))
 
 
+#       PORTA INTERNA
 
+porta = COLOR([0.58823529411,0.29411764705,0])(CUBOID([1,0.06,2.5]))
+
+primoPezzoManiglia = T([1,2,3])([0.9,-0.1,0.95])(CUBOID([0.03,0.1,0.03]))
+
+secondoPezzoManiglia = T([1,2,3])([0.75,-0.1,0.95])(CUBOID([0.2,0.03,0.03]))
+maniglia = STRUCT([primoPezzoManiglia,secondoPezzoManiglia])
+maniglia = COLOR([0.8,0.4,0])(maniglia)
+maniglia2 = maniglia
+maniglia2 = R([2,2])(PI)(maniglia2)
+maniglia2 = T(2)(0.05)(maniglia2)
+portaInterna = STRUCT([porta,maniglia, maniglia2])
+portaInternaStanza_1 = portaInterna
+
+portaInterna = STRUCT([porta,maniglia,maniglia2])
+portaInternaStanza_1 = T([1,2,3])([3.3,5.22,0.57])(portaInterna)
+portaInternaStanza_2 = T([1,2,3])([5.1,5.22,0.57])(portaInterna)
+portaInternaBagno = T([1,2,3])([6.59,3.755,0.57])(R([1,2])(PI/2)(portaInterna))
+portaInternaStanza_3 = T([1,2,3])([5.5,3.53,0.57])(portaInterna)
+portaInternaCucina = T([1,2,3])([2.5,3.53,0.57])(portaInterna)
+portaInternaStanzino = T([1,2,3])([0.75,3.53,0.57])(portaInterna)
+casaConPorte = STRUCT([modelloPiano,portaIngresso,portaInternaStanza_1,portaInternaStanza_2,portaInternaBagno,portaInternaStanza_3,portaInternaCucina,portaInternaStanzino])
+#VIEW(casaConPorte)
+
+#       FINESTRE
+
+finestraX = COLOR(CYAN)(CUBOID([9.18,0.2,2.8]))
+finestraY = COLOR(CYAN)(CUBOID([0.2,7,2]))
+finestraX = T([1,2,3])([0.5,0.02,0.3])(finestraX)
+finestraY = T([1,2,3])([10.18,1.4,1])(finestraY)
+finestraXsup = T([1,2,3])([0.5,9.35,0.18])(finestraX)
 
 
 
@@ -366,18 +422,35 @@ tienitiBeneSX = T([1,2,3])([0.01,0.008,0.95])(CUBOID([0.08,0.88,0.08]))
 balcone = T([1,2,3])([2.6,-1,0.4])(STRUCT([COLOR(BLACK)(ringhiera),sottoBalcone,COLOR(BROWN)(tienitiBene),COLOR(BROWN)(tienitiBeneSX),COLOR(BROWN)(tienitiBeneDX)]))
 
 
-modelloPiano = STRUCT([modelloPiano,balcone])
-palazzo = STRUCT([modelloPiano,T(3)(3)]*6)
+
+pianoTerra = STRUCT([casaConPorte,finestraX,finestraY,finestraXsup])
+pianiVari = STRUCT([casaConPorte,finestraX,finestraY,finestraXsup,balcone])
+pianiVari = T(3)(3)(STRUCT([pianiVari,T(3)(3)]*5))
 tetto = T(3)(18)(CUBOID([10.4,9.6,0.3]))
-finestraStanzino = COLOR(CYAN)(T([1,2])([.8,0.05])(CUBOID([0.8,0.2,18])))
-finestraCucina = COLOR(CYAN)(T([1,2])([2.8,0.05])(CUBOID([1.2,0.2,18])))
-finestreLateraliDestra = COLOR(CYAN)(T([1,2])([0.05,2.8])(CUBOID([0.2,5,18])))
-finestreLateraliSinistra = COLOR(CYAN)(T([1,2])([10.15,.8])(CUBOID([0.2,8,18])))
-finestrePosteriori = COLOR(CYAN)(T([1,2])([1.6,9.3])(CUBOID([4,0.2,18])))
-palazzo = STRUCT([palazzo, tetto, finestraStanzino,finestraCucina,finestreLateraliDestra,finestreLateraliSinistra,finestrePosteriori])
+palazzo = STRUCT([pianoTerra,pianiVari,tetto])
 
-palazzo = T(1)(1)(palazzo)
+palazzo = T(1)(3)(palazzo)
+piattaforma = T([1,2])([-3,3.5])(CUBOID([6,2,0.35]))
+piattaforme = STRUCT([piattaforma,T(3)(3)]*7)
+palazzi = STRUCT([palazzo,S(1)(-1)(palazzo),piattaforme])
+
+#       SCALA A CHIOCCIOLA
+def spiralStair(thickness=0.2,R=1.,r=0.5,riser=0.1,pitch=2.,nturns=2.,steps=18):
+    V,CV = larSolidHelicoid(thickness,R,r,pitch,nturns,steps)()
+    W = CAT([[V[k],V[k+1],V[k+2],V[k+3]]+[SUM([V[k+1],[0,0,-riser]]),SUM([V[k+3],[0,0,-riser]])]
+        for k,v in enumerate(V[:-4]) if k%4==0])
+    for k,w in enumerate(W[:-12]):
+        if k%6==0: W[k+1][2]=W[k+10][2]; W[k+3][2]=W[k+11][2]
+    nsteps = len(W)/12
+    CW =[SUM([[0,1,2,3,6,8,10,11],[6*k]*8])
+            for k in range(nsteps)]
+    return W,CW
+
+stair = STRUCT(MKPOLS(spiralStair(0.2,1,0.5,0.1,2,15,18)))
+stair = R([1,2])(PI/2)(stair)
+stair = T(2)(2.5)(stair)
+
+attraversamentoUltimoPiano = T([2,3])([1.5,15])(CUBOID([0.5,2,0.2]))
 
 
-
-VIEW(STRUCT([palazzo,S(1)(-1)(palazzo)]))
+VIEW(STRUCT([palazzi,stair,attraversamentoUltimoPiano]))

@@ -16,7 +16,7 @@ master = assemblyDiagramInit([1,3,2])([[10.4],[3.6,1.6,4.4],[0.3,3]])
 V_master,CV_master = master
 hpc = SKEL_1(STRUCT(MKPOLS(master)))
 hpc = cellNumbering (master,hpc)(range(len(CV_master)),CYAN,2)
-VIEW(hpc)
+#VIEW(hpc)
 
 #           MASTER 1:   (1)
 master_uno = assemblyDiagramInit([3,1,1])([[2,2.4,5.2],[3.6],[3]])
@@ -51,7 +51,7 @@ master = diagram2cell(master_tre,master,toMerge_terzo)
 #
 hpc = SKEL_1(STRUCT(MKPOLS(master)))
 hpc = cellNumbering (master,hpc)(range(len(master[1])),CYAN,2)
-VIEW(hpc)
+#VIEW(hpc)
 
 
 #           STANZINO:
@@ -83,7 +83,7 @@ hpc = cellNumbering (masterStanzino,hpc)(range(len(masterStanzino[1])),CYAN,2)
 
 toRemove = [24]
 masterStanzino = masterStanzino[0], [cell for k,cell in enumerate(masterStanzino[1]) if not (k in toRemove)]
-DRAW(masterStanzino)
+#DRAW(masterStanzino)
 
 #           CUCINA:
 diagramCucina = assemblyDiagramInit([3,3,2])([[0.1,2.4,0.1],[0.3,3.6,0.1],[0.3,3]])
@@ -114,7 +114,7 @@ hpc = cellNumbering (masterCucina,hpc)(range(len(masterCucina[1])),CYAN,2)
 
 toRemove = [22]
 masterCucina = masterCucina[0], [cell for k,cell in enumerate(masterCucina[1]) if not (k in toRemove)]
-DRAW(masterCucina)
+#DRAW(masterCucina)
 
 #           STANZA_3:
 diagramStanza_3 = assemblyDiagramInit([3,3,2])([[0.1,5.2,0.3],[0.3,3.6,0.1],[0.3,3]])
@@ -125,7 +125,7 @@ hpcDiagramStanza_3 = cellNumbering (diagramStanza_3,hpcStanza_3)(range(len(CVSta
 
 toMerge = 11
 
-doorStanza_3 = assemblyDiagramInit([3,1,2])([[0.4,0.8,2],[0.1],[2.2,0.5]])
+doorStanza_3 = assemblyDiagramInit([3,1,2])([[0.4,0.5,2],[0.1],[2.2,0.5]])
 masterStanza_3 = diagram2cell(doorStanza_3,diagramStanza_3,toMerge)
 hpc = SKEL_1(STRUCT(MKPOLS(masterStanza_3)))
 hpc = cellNumbering (masterStanza_3,hpc)(range(len(masterStanza_3[1])),CYAN,2)
@@ -145,7 +145,7 @@ hpc = cellNumbering (masterStanza_3,hpc)(range(len(masterStanza_3[1])),CYAN,2)
 
 toRemove = [24]
 masterStanza_3 = masterStanza_3[0], [cell for k,cell in enumerate(masterStanza_3[1]) if not (k in toRemove)]
-DRAW(masterStanza_3)
+#DRAW(masterStanza_3)
 
 #           CORRIDOIO:
 diagramCorridoio = assemblyDiagramInit([3,3,2])([[0.3,6,0.1],[0.1,1.6,0.1],[0.3,3]])
@@ -164,7 +164,7 @@ hpc = cellNumbering (masterCorridoio,hpc)(range(len(masterCorridoio[1])),CYAN,2)
 
 toRemove = [19,8]
 masterCorridoio = masterCorridoio[0], [cell for k,cell in enumerate(masterCorridoio[1]) if not (k in toRemove)]
-DRAW(masterCorridoio)
+#DRAW(masterCorridoio)
 
 #           BAGNO
 diagramBagno = assemblyDiagramInit([3,3,2])([[0.1,3.6,0.3],[0.1,1.6,0.1],[0.3,3]])
@@ -191,7 +191,7 @@ hpc = cellNumbering (masterBagno,hpc)(range(len(masterBagno[1])),CYAN,2)
 
 toRemove = [26,8,18]
 masterBagno = masterBagno[0], [cell for k,cell in enumerate(masterBagno[1]) if not (k in toRemove)]
-DRAW(masterBagno)
+#DRAW(masterBagno)
 
 #           STANZA_1
 diagramStanza_1 = assemblyDiagramInit([3,3,2])([[0.3,4.4,0.1],[0.1,4.4,0.3],[0.3,3]])
@@ -214,7 +214,8 @@ masterStanza_1 = masterStanza_1[0], [cell for k,cell in enumerate(masterStanza_1
 
 toMerge = 9
 
-windowStanza_1 = assemblyDiagramInit([3,1,3])([[2,1.6,0.8],[0.3],[0.8,1.6,2]])
+#windowStanza_1 = assemblyDiagramInit([3,1,3])([[2,1.6,0.8],[0.3],[0.8,1.6,2]])
+windowStanza_1 = assemblyDiagramInit([3,1,3])([[1.2,1.6,0.8],[0.3],[2,3.5,2]])
 masterStanza_1 = diagram2cell(windowStanza_1,masterStanza_1,toMerge)
 hpc = SKEL_1(STRUCT(MKPOLS(masterStanza_1)))
 hpc = cellNumbering (masterStanza_1,hpc)(range(len(masterStanza_1[1])),CYAN,2)
@@ -222,7 +223,7 @@ hpc = cellNumbering (masterStanza_1,hpc)(range(len(masterStanza_1[1])),CYAN,2)
 
 toRemove = [24]
 masterStanza_1 = masterStanza_1[0], [cell for k,cell in enumerate(masterStanza_1[1]) if not (k in toRemove)]
-DRAW(masterStanza_1)
+#DRAW(masterStanza_1)
 
 
 
@@ -255,7 +256,7 @@ hpc = cellNumbering (masterStanza_2,hpc)(range(len(masterStanza_2[1])),CYAN,2)
 
 toRemove = [24]
 masterStanza_2 = masterStanza_2[0], [cell for k,cell in enumerate(masterStanza_2[1]) if not (k in toRemove)]
-DRAW(masterStanza_2)
+#DRAW(masterStanza_2)
 
 
 #       INSERISCO STANZINO:
@@ -321,4 +322,66 @@ master = master[0], [cell for k,cell in enumerate(master[1]) if not (k in toRemo
 
 CREA_MODELLO = COMP([STRUCT,MKPOLS])
 modelloPiano = CREA_MODELLO(master)
-VIEW(modelloPiano)
+#VIEW(modelloPiano)
+
+
+
+#       PORTA DI INGRESSO
+
+porta = COLOR([0.58823529411,0.29411764705,0])(CUBOID([1,0.15,1.5]))
+
+linea0 = T([1,2])([0,-0.01])(COLOR(BLACK)(CUBOID([0.05,0.03,1.5])))
+linea1 = T([1,2])([0.1,-0.01])(COLOR(BLACK)(CUBOID([0.05,0.03,1.5])))
+linea2 = T([1,2])([0.2,-0.01])(COLOR(BLACK)(CUBOID([0.05,0.03,1.5])))
+linea3 = T([1,2])([0.3,-0.01])(COLOR(BLACK)(CUBOID([0.05,0.03,1.5])))
+linea4 = T([1,2])([0.4,-0.01])(COLOR(BLACK)(CUBOID([0.05,0.03,1.5])))
+linea5 = T([1,2])([0.5,-0.01])(COLOR(BLACK)(CUBOID([0.05,0.03,1.5])))
+linea6 = T([1,2])([0.6,-0.01])(COLOR(BLACK)(CUBOID([0.05,0.03,1.5])))
+linea7 = T([1,2])([0.7,-0.01])(COLOR(BLACK)(CUBOID([0.05,0.03,1.5])))
+linea8 = T([1,2])([0.8,-0.01])(COLOR(BLACK)(CUBOID([0.05,0.03,1.5])))
+linea9 = T([1,2])([0.9,-0.01])(COLOR(BLACK)(CUBOID([0.05,0.03,1.5])))
+primoPezzoManiglia = T([1,2,3])([0.9,-0.1,0.95])(CUBOID([0.03,0.1,0.03]))
+
+secondoPezzoManiglia = T([1,2,3])([0.75,-0.1,0.95])(CUBOID([0.2,0.03,0.03]))
+maniglia = STRUCT([primoPezzoManiglia,secondoPezzoManiglia])
+maniglia = COLOR([0.8,0.4,0])(maniglia)
+
+portaIngresso = STRUCT([porta,linea0,linea1,linea2,linea3,linea4,linea5,linea6,linea7,linea8,linea9,maniglia])
+portaIngresso = T([1,2,3])([0.1,4.9,0.57])(S(3)(1.5)(R([1,2])(-PI/2)(portaIngresso)))
+
+#VIEW(STRUCT([modelloPiano,portaIngresso]))
+
+
+#       PORTA INTERNA
+
+porta = COLOR([0.58823529411,0.29411764705,0])(CUBOID([1,0.06,2.5]))
+
+primoPezzoManiglia = T([1,2,3])([0.9,-0.1,0.95])(CUBOID([0.03,0.1,0.03]))
+
+secondoPezzoManiglia = T([1,2,3])([0.75,-0.1,0.95])(CUBOID([0.2,0.03,0.03]))
+maniglia = STRUCT([primoPezzoManiglia,secondoPezzoManiglia])
+maniglia = COLOR([0.8,0.4,0])(maniglia)
+maniglia2 = maniglia
+maniglia2 = R([2,2])(PI)(maniglia2)
+maniglia2 = T(2)(0.05)(maniglia2)
+portaInterna = STRUCT([porta,maniglia, maniglia2])
+portaInternaStanza_1 = portaInterna
+
+portaInterna = STRUCT([porta,maniglia,maniglia2])
+portaInternaStanza_1 = T([1,2,3])([3.3,5.22,0.57])(portaInterna)
+portaInternaStanza_2 = T([1,2,3])([5.1,5.22,0.57])(portaInterna)
+portaInternaBagno = T([1,2,3])([6.59,3.755,0.57])(R([1,2])(PI/2)(portaInterna))
+portaInternaStanza_3 = T([1,2,3])([5.5,3.53,0.57])(portaInterna)
+portaInternaCucina = T([1,2,3])([2.5,3.53,0.57])(portaInterna)
+portaInternaStanzino = T([1,2,3])([0.75,3.53,0.57])(portaInterna)
+casaConPorte = STRUCT([modelloPiano,portaIngresso,portaInternaStanza_1,portaInternaStanza_2,portaInternaBagno,portaInternaStanza_3,portaInternaCucina,portaInternaStanzino])
+#VIEW(casaConPorte)
+
+#       FINESTRE
+
+finestraX = COLOR(CYAN)(CUBOID([9.18,0.2,2.8]))
+finestraY = COLOR(CYAN)(CUBOID([0.2,7,2]))
+finestraX = T([1,2,3])([0.5,0.02,0.3])(finestraX)
+finestraY = T([1,2,3])([10.18,1.4,1])(finestraY)
+finestraXsup = T([1,2,3])([0.5,9.35,0.18])(finestraX)
+VIEW(STRUCT([casaConPorte,finestraX,finestraY,finestraXsup]))

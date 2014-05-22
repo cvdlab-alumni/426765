@@ -1,27 +1,45 @@
-from pyplasm import *
 from scipy import *
+from splines import *
+from sysml import *
 from lar2psm import *
 from simplexn import *
 from larcc import *
 from largrid import *
 from mapper import *
 from boolean import *
-from sysml import *
 
 DRAW = COMP([VIEW,STRUCT,MKPOLS])
-
-master = assemblyDiagramInit([5,5,2])([[.3,3.2,.1,5,.3],[.3,4,.1,2.9,.3],[.3,2.7]])
-V,CV = master
-hpc = SKEL_1(STRUCT(MKPOLS(master)))
-hpc = cellNumbering (master,hpc)(range(len(CV)),CYAN,2)
-VIEW(hpc)
-
-def merge(diagram,master,toMerge):
-    for i in toMerge:
+# numerazione
+def numbering(master):
+    hpc = SKEL_1(STRUCT(MKPOLS(master)))
+    hpc = cellNumbering (master,hpc)(range(len(master[1])),CYAN,1)
+    VIEW(hpc)
+# merge
+def diagram2cellGroup(diagram,master,group):
+    group.sort();
+    group.reverse();
+    for i in group:
         master = diagram2cell(diagram,master,i)
-        hpc = SKEL_1(STRUCT(MKPOLS(master)))
-        hpc = cellNumbering (master,hpc)(range(len(master[1])),CYAN,2)
-        VIEW(hpc)
+    numbering(master)
+    return master
 
-diagram = assemblyDiagramInit([3,1,2])([[2,1,2],[.3],[2.2,.5]])
-merge(diagram,master,[33,13])
+# delete
+def cellsOff(master,group):
+    V,CV = master
+    master =  V,[cell for i,cell in enumerate(CV) if not (i in group)]
+    numbering(master)
+    return master
+
+
+
+#   INSERISCE AUTOMATICAMENTE CELLE
+def automaticInsert(master,group,diagram):
+    numbering(master)
+    master = diagram2cellGroup(diagram,master,group)
+    return master
+
+
+#   RIMUOVE AUTOMATICAMENTE CELLE
+def automaticRemove(master, group):
+	master = cellsOff(master,group)
+	return master
