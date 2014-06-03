@@ -182,8 +182,8 @@
         // render using requestAnimationFrame
         for (var i = 0; i < arrayAlberi.length; i++) {
 //          arrayAlberi[i].rotation.y += 0.05;
-//          arrayAlberi[i].rotation.x += 0.05;
-//          arrayAlberi[i].rotation.z += 0.15;
+          arrayAlberi[i].rotation.x += 0.05;
+          arrayAlberi[i].rotation.z += 0.15;
           scene.add(arrayAlberi[i]);
         }
         
