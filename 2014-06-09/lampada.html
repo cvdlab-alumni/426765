@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html>
+ <head> 
+  <title>Progetto Lamp</title> 
+  <style>
+    body{
+      margin: 0;
+      overflow: hidden;
+    }
+
+    #stats {  /* Align stats top-left */
+      position: absolute;
+      left: 0px;
+      top: 0px;
+    }
+  </style> 
+  </head>
+  <body>  
+    <!-- JavaScript libraries -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> 
+<script src="http://cdnjs.cloudflare.com/ajax/libs/three.js/r67/three.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/stats.js/r11/Stats.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.5/dat.gui.min.js"></script>
+<script src="assets/TrackballControls.js"></script>
+<script src="assets/builderFunctions.js"></script>
+<script src="assets/tween.min.js"></script>
+<script type="text/javascript" src="assets/fonts/helvetiker_regular.typeface.js"></script> 
+<script type="text/javascript" src="assets/fonts/helvetiker_bold.typeface.js"></script> 
+<script type="text/javascript" src="assets/fonts/bitstream_vera_sans_mono_roman.typeface.js"></script> 
+    <!-- Javascript code that runs our Three.js examples --> 
+    <script>
+      // once everything is loaded, we run our Three.js stuff.
+      $(function () {
+        var axisHelper = new THREE.AxisHelper( 5 );
+        var stats = initStats();
+        var scene = new THREE.Scene();
+        var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        var trackballControls = new THREE.TrackballControls(camera);
+        var renderer = new THREE.WebGLRenderer();
+
+        renderer.setClearColor(new THREE.Color(0x8e9fb9, 1.0));
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMapEnabled = true;
+
+        var parametriTavolo = {
+          lunghezza: 15,
+          larghezza: 8,
+          spessore: 0.7,
+          colore: "#F0F8FF"
+        };
+        var parametriGambe = {
+          altezza: 5,
+          raggioTop: 0.5,
+          raggioBottom: 0.5,
+          colore: "#000000"
+        };
+        var parametriBaseLuce = {
+          raggioTop: 1,
+          raggioBottom: 0.8,
+          colore: "#330000"
+        };
+        var parametriJointBase = {
+          raggioSfera: 0.3,
+          colore: "#EFE2DB"
+        };
+
+        var tavolo = makeTable(parametriTavolo.lunghezza,parametriTavolo.larghezza,parametriTavolo.spessore, 20,20,20,parametriTavolo.colore,parametriGambe.raggioTop,parametriGambe.raggioBottom,parametriGambe.altezza,20,20,parametriGambe.colore);
+        
+        
+        var baseLuce = makeBaseLamp(parametriBaseLuce.raggioTop, parametriBaseLuce.raggioBottom, 0.3, 20,20, parametriBaseLuce.colore, parametriTavolo.larghezza, parametriTavolo.lunghezza, parametriGambe.altezza + parametriTavolo.spessore - 0.3, parametriBaseLuce.colore);
+
+        var jointBase = makeJoint(parametriJointBase.raggioSfera, parametriJointBase.colore);
+        var cilindri = makeFourCylinder();
+
+        baseLuce.add(jointBase);
+        jointBase.add(cilindri);
+
+        var pallaCentrale = makeJoint(parametriJointBase.raggioSfera, parametriJointBase.colore);
+
+        cilindri.add(pallaCentrale);
+        pallaCentrale.position.set(0,-2.7,0);
+
+        var cilindriSuperiori = makeFourCylinder();
+        pallaCentrale.add(cilindriSuperiori);
+
+        var pallaSuperiore = makeLamp();
+        
+        cilindriSuperiori.add(pallaSuperiore);
+
+        var directionalLight = new THREE.DirectionalLight( 0xFFFFFF, 0.8);
+        directionalLight.position.set(1, 1, 1);
+        scene.add(directionalLight);
+
+
+
+        scene.add(axisHelper);
+        scene.add(baseLuce);
+        scene.add(tavolo);
+
+        var interruttore = makeSwichOnOff();
+        interruttore.position.set(0,-0.2,0.5);
+        baseLuce.add(interruttore);
+
+        
+
+        camera.position.set(15,20,15);
+        camera.up = new THREE.Vector3(0,0,1);
+        camera.lookAt(scene.position);
+
+
+        var spotlight = new THREE.SpotLight(0xffffff, 3);
+        spotlight.shadowDarkness = 1;
+        spotlight.castShadow = true;
+        spotlight.position.set(0,-0.5,0);
+        spotlight.shadowCameraNear = 2;
+        pallaSuperiore.add(spotlight);
+        var lightTarget = new THREE.Object3D();
+        lightTarget.position.set(0,-50,0);
+        pallaSuperiore.add(lightTarget);
+        spotlight.target = lightTarget;
+        
+        pallaSuperiore.add(spotlight);
+
+        //luce lampadina:
+        var lightLamp = new THREE.PointLight( 0xFFE600, 5, 0.98 );
+        lightLamp.position.set(0,-1.2,0);
+        pallaSuperiore.add(lightLamp);
+        
+
+        $('body').append(renderer.domElement);
+               
+        var P;
+        var I;
+        var X;
+        var A;
+        var R;
+
+        var controls = new function () {
+
+        this.size = 1.8;
+        this.height = 0.4;
+       
+        this.curveSegments = 12;
+        this.steps = 1;
+        this.font = "helvetiker";
+        this.weight = "bold";
+        this.style = "italics";
+
+        this.asGeom = function () {
+          // remove the old text
+
+          // create a new one
+
+          var options = {
+            size: controls.size,
+            height: controls.height,
+            weight: controls.weight,
+            font: controls.font,
+         
+            curveSegments: controls.curveSegments,
+            steps: controls.steps
+          };
+
+          console.log(THREE.FontUtils.faces);
+
+          var coloreFont = "#5F021F";
+          //P = createMesh(new THREE.TextGeometry("P", options));
+          var Pmaterial = new THREE.MeshPhongMaterial({color: coloreFont});
+          var PtextGeom = new THREE.TextGeometry( 'P', options);
+          var P = new THREE.Mesh( PtextGeom, Pmaterial );
+          P.rotation.x = Math.PI/2;
+          P.castShadow = true;
+          P.receiveShadow = true;
+
+          var Imaterial = new THREE.MeshPhongMaterial({color: coloreFont});
+          var ItextGeom = new THREE.TextGeometry( 'I', options);
+          var I = new THREE.Mesh( ItextGeom, Imaterial );
+          I.rotation.x = Math.PI/2;
+          I.castShadow = true;
+          I.receiveShadow = true;
+
+          var Xmaterial = new THREE.MeshPhongMaterial({color: coloreFont});
+          var XtextGeom = new THREE.TextGeometry( 'X', options);
+          var X = new THREE.Mesh( XtextGeom, Xmaterial );
+          X.rotation.x = Math.PI/2;
+          X.castShadow = true;
+          X.receiveShadow = true;
+          
+          var Amaterial = new THREE.MeshPhongMaterial({color: coloreFont});
+          var AtextGeom = new THREE.TextGeometry( 'A', options);
+          var A = new THREE.Mesh( AtextGeom, Amaterial );
+          A.rotation.x = Math.PI/2;
+          A.castShadow = true;
+          A.receiveShadow = true;
+          
+          var Rmaterial = new THREE.MeshPhongMaterial({color: coloreFont});
+          var RtextGeom = new THREE.TextGeometry( 'R', options);
+          var R = new THREE.Mesh( RtextGeom, Rmaterial );
+          R.rotation.x = Math.PI/2;
+          R.castShadow = true;
+          R.receiveShadow = true;
+
+
+          P.position.z = 5.35;  //altezza scritta
+          P.position.y = 7.5;
+          P.position.x = 12;
+          P.rotation.x = Math.PI/2;
+          P.rotation.y = Math.PI;
+
+
+          I.position.z = 5.35;  //altezza scritta
+          I.position.y = 7.5;
+          I.position.x = 10.5;
+          I.rotation.x = Math.PI/2;
+          I.rotation.y = Math.PI;
+
+
+          X.position.z = 5.35;  //altezza scritta
+          X.position.y = 7.5;
+          X.position.x = 9.9;
+          X.rotation.x = Math.PI/2;
+          X.rotation.y = Math.PI;
+
+
+          A.position.z = 5.35;  //altezza scritta
+          A.position.y = 7.5;
+          A.position.x = 8.3;
+          A.rotation.x = Math.PI/2;
+          A.rotation.y = Math.PI;
+  
+
+          R.position.z = 5.35;  //altezza scritta
+          R.position.y = 7.5;
+          R.position.x = 6.5;
+          R.rotation.x = Math.PI/2;
+          R.rotation.y = Math.PI;
+  
+
+          var testoCompleto = new THREE.Object3D();
+
+          testoCompleto.add(P);
+          testoCompleto.add(I);
+          testoCompleto.add(X);
+          testoCompleto.add(A);
+          testoCompleto.add(R);
+
+
+          
+
+
+          tavolo.add(testoCompleto);
+
+          var PTweenUp = new TWEEN.Tween(P.position).to({z:7}, 500).easing(TWEEN.Easing.Linear.None).start();
+          var PTweenDown = new TWEEN.Tween(P.position).to({z:5.35}, 300).easing(TWEEN.Easing.Linear.None).start();
+          PTweenUp.chain(PTweenDown)
+
+          var ITweenUp = new TWEEN.Tween(I.position).to({z:7}, 500).easing(TWEEN.Easing.Linear.None).delay(400).start();
+          var ITweenDown = new TWEEN.Tween(I.position).to({z:5.35}, 300).easing(TWEEN.Easing.Linear.None).start();
+          ITweenUp.chain(ITweenDown)
+
+          var XTweenUp = new TWEEN.Tween(X.position).to({z:7}, 500).easing(TWEEN.Easing.Linear.None).delay(800).start();
+          var XTweenDown = new TWEEN.Tween(X.position).to({z:5.35}, 300).easing(TWEEN.Easing.Linear.None).start();
+          XTweenUp.chain(XTweenDown)
+
+          var ATweenUp = new TWEEN.Tween(A.position).to({z:7}, 500).easing(TWEEN.Easing.Linear.None).delay(1200).start();
+          var ATweenDown = new TWEEN.Tween(A.position).to({z:5.35}, 300).easing(TWEEN.Easing.Linear.None).start();
+          ATweenUp.chain(ATweenDown)
+
+          var RTweenUp = new TWEEN.Tween(R.position).to({z:7}, 500).easing(TWEEN.Easing.Linear.None).delay(1600).start();
+          var RTweenDown = new TWEEN.Tween(R.position).to({z:5.35}, 300).easing(TWEEN.Easing.Linear.None).start();
+          RTweenUp.chain(RTweenDown)
+
+
+          //lettere che cadono
+          var PTweenCade = new TWEEN.Tween(P.rotation).to({z:Math.PI/2}, 500).easing(TWEEN.Easing.Linear.None).delay(1400).start();
+          
+          
+
+          var ITweenCade = new TWEEN.Tween(I.rotation).to({x:Math.PI}, 500).easing(TWEEN.Easing.Linear.None).delay(1800).start();
+
+          var XTweenCade = new TWEEN.Tween(X.rotation).to({x:-0}, 500).easing(TWEEN.Easing.Linear.None).delay(2200).start();
+          var XTweenCadeTerra = new TWEEN.Tween(X.position).to({z:0}, 500).easing(TWEEN.Easing.Linear.None).delay(2200).start();
+          XTweenCade.chain(XTweenCadeTerra);
+          
+          var ATweenCade = new TWEEN.Tween(A.rotation).to({x:Math.PI}, 500).easing(TWEEN.Easing.Linear.None).delay(2600).start();
+
+          var RTweenVa = new TWEEN.Tween(R.position).to({x:-10}, 50).easing(TWEEN.Easing.Linear.None).delay(3000).start();
+
+          var RTweenTorna = new TWEEN.Tween(R.position).to({x:6.5}, 700).easing(TWEEN.Easing.Bounce.Out).delay(50).start();
+          RTweenVa.chain(RTweenTorna);
+          //var RTweenCadeTerra = new TWEEN.Tween(R.position).to({z:0}, 500).easing(TWEEN.Easing.Linear.None).delay(3500).start();
+          //var RTweenCadeTerraSdraiato = new TWEEN.Tween(R.rotation).to({x:0}, 500).easing(TWEEN.Easing.Linear.None).delay(4000).start();
+          var rotateLamp = new TWEEN.Tween(pallaSuperiore.rotation).to({y:Math.PI/2, x: 4*Math.PI*(0.95)}, 1000).easing(TWEEN.Easing.Linear.None).delay(3500).start();
+
+          setTimeout(function() {
+            spotlight.visible = false;
+            lightLamp.visible = false;}
+            ,5500);
+        };
+          setTimeout(function() {
+            spotlight.visible = true;
+            lightLamp.visible = true;}
+            ,5600);
+        
+        
+      }
+
+      //animazione luce:
+      var tween = new TWEEN.Tween(jointBase.rotation).to({y:-2*Math.PI/4*(0.8)}, 2500).easing(TWEEN.Easing.Linear.None).start();
+
+      
+      controls.asGeom();
+      pallaCentrale.rotation.z = Math.PI/3;
+      pallaCentrale.rotation.y = -Math.PI/4;
+      pallaSuperiore.rotation.z = Math.PI/2;
+      function createMesh(geom) {
+        var meshMaterial = new THREE.MeshPhongMaterial({specular: 0xffffff, color: 0xff5555, shininess: 100, metal: true});
+        var plane = THREE.SceneUtils.createMultiMaterialObject(geom, [meshMaterial]);
+        
+        return plane;
+      }
+
+
+
+
+        var controls = new function () {
+          this.rotArmBottom_Z = 0;
+          this.rotArmBottom_Y = 5;
+          this.rotArmTop_Z = Math.PI/3;
+          this.rotArmTop_Y = Math.PI;
+          this.rotLamp_Z = Math.PI/2;
+          this.rotLamp_Y = 0;
+          this.swichLuce = true;
+          }
+
+        var gui = new dat.GUI();     
+
+        gui.add(controls, 'rotArmBottom_Z', 0, Math.PI/5).onChange(function (e) {
+        jointBase.rotation.z = e;
+          });
+        gui.add(controls, 'rotArmBottom_Y', 0, 2*Math.PI).onChange(function (e) {
+        jointBase.rotation.y = e;
+          });
+
+        gui.add(controls, 'rotLamp_Z', 0, Math.PI/2).onChange(function (e) {
+        pallaSuperiore.rotation.z = e;
+          });
+        gui.add(controls, 'rotLamp_Y', 0, 2*Math.PI).onChange(function (e) {
+        pallaSuperiore.rotation.y = e;
+          });
+
+        gui.add(controls, 'rotArmTop_Z', 0, Math.PI/2).onChange(function (e) {
+        pallaCentrale.rotation.z = e;
+          });
+        gui.add(controls, 'rotArmTop_Y', 0, 2*Math.PI).onChange(function (e) {
+        pallaCentrale.rotation.y = e;
+          });
+        gui.add(controls, 'swichLuce').onChange(function (e) {
+          spotlight.visible = e;
+          lightLamp.visible = e;
+          changeSwich();
+          });
+
+        render();
+
+        function changeSwich() {
+          interruttore.rotation.z = -Math.PI;
+        }
+        function render() {
+          stats.update();
+          trackballControls.update();
+          TWEEN.update();
+          requestAnimationFrame(render);
+          renderer.render(scene, camera);
+        }
+
+        function initStats() {
+          var stats = new Stats();
+          stats.setMode(0); // 0: fps, 1: ms
+          $('body').append(stats.domElement);
+          return stats;
+        }
+      });
+    </script>  
+ </body>
+</html>
