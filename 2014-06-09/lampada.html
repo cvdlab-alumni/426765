@@ -167,35 +167,35 @@
           //P = createMesh(new THREE.TextGeometry("P", options));
           var Pmaterial = new THREE.MeshPhongMaterial({color: coloreFont});
           var PtextGeom = new THREE.TextGeometry( 'P', options);
-          var P = new THREE.Mesh( PtextGeom, Pmaterial );
+          P = new THREE.Mesh( PtextGeom, Pmaterial );
           P.rotation.x = Math.PI/2;
           P.castShadow = true;
           P.receiveShadow = true;
 
           var Imaterial = new THREE.MeshPhongMaterial({color: coloreFont});
           var ItextGeom = new THREE.TextGeometry( 'I', options);
-          var I = new THREE.Mesh( ItextGeom, Imaterial );
+          I = new THREE.Mesh( ItextGeom, Imaterial );
           I.rotation.x = Math.PI/2;
           I.castShadow = true;
           I.receiveShadow = true;
 
           var Xmaterial = new THREE.MeshPhongMaterial({color: coloreFont});
           var XtextGeom = new THREE.TextGeometry( 'X', options);
-          var X = new THREE.Mesh( XtextGeom, Xmaterial );
+          X = new THREE.Mesh( XtextGeom, Xmaterial );
           X.rotation.x = Math.PI/2;
           X.castShadow = true;
           X.receiveShadow = true;
           
           var Amaterial = new THREE.MeshPhongMaterial({color: coloreFont});
           var AtextGeom = new THREE.TextGeometry( 'A', options);
-          var A = new THREE.Mesh( AtextGeom, Amaterial );
+          A = new THREE.Mesh( AtextGeom, Amaterial );
           A.rotation.x = Math.PI/2;
           A.castShadow = true;
           A.receiveShadow = true;
           
           var Rmaterial = new THREE.MeshPhongMaterial({color: coloreFont});
           var RtextGeom = new THREE.TextGeometry( 'R', options);
-          var R = new THREE.Mesh( RtextGeom, Rmaterial );
+          R = new THREE.Mesh( RtextGeom, Rmaterial );
           R.rotation.x = Math.PI/2;
           R.castShadow = true;
           R.receiveShadow = true;
@@ -299,10 +299,9 @@
         };
           setTimeout(function() {
             spotlight.visible = true;
-            lightLamp.visible = true;}
-            ,5600);
-        
-        
+            lightLamp.visible = true;
+          }
+            ,5600);     
       }
 
       //animazione luce:
@@ -313,23 +312,17 @@
       pallaCentrale.rotation.z = Math.PI/3;
       pallaCentrale.rotation.y = -Math.PI/4;
       pallaSuperiore.rotation.z = Math.PI/2;
-      function createMesh(geom) {
-        var meshMaterial = new THREE.MeshPhongMaterial({specular: 0xffffff, color: 0xff5555, shininess: 100, metal: true});
-        var plane = THREE.SceneUtils.createMultiMaterialObject(geom, [meshMaterial]);
-        
-        return plane;
-      }
 
 
 
 
         var controls = new function () {
           this.rotArmBottom_Z = 0;
-          this.rotArmBottom_Y = 5;
+          this.rotArmBottom_X = 5;
           this.rotArmTop_Z = Math.PI/3;
-          this.rotArmTop_Y = Math.PI;
+          this.rotArmTop_X = Math.PI;
           this.rotLamp_Z = Math.PI/2;
-          this.rotLamp_Y = 0;
+          this.rotLamp_X = 0;
           this.swichLuce = true;
           }
 
@@ -338,27 +331,33 @@
         gui.add(controls, 'rotArmBottom_Z', 0, Math.PI/5).onChange(function (e) {
         jointBase.rotation.z = e;
           });
-        gui.add(controls, 'rotArmBottom_Y', 0, 2*Math.PI).onChange(function (e) {
+        gui.add(controls, 'rotArmBottom_X', 0, 2*Math.PI).onChange(function (e) {
         jointBase.rotation.y = e;
           });
 
         gui.add(controls, 'rotLamp_Z', 0, Math.PI/2).onChange(function (e) {
         pallaSuperiore.rotation.z = e;
           });
-        gui.add(controls, 'rotLamp_Y', 0, 2*Math.PI).onChange(function (e) {
+        gui.add(controls, 'rotLamp_X', 0, 2*Math.PI).onChange(function (e) {
         pallaSuperiore.rotation.y = e;
           });
 
         gui.add(controls, 'rotArmTop_Z', 0, Math.PI/2).onChange(function (e) {
         pallaCentrale.rotation.z = e;
           });
-        gui.add(controls, 'rotArmTop_Y', 0, 2*Math.PI).onChange(function (e) {
+        gui.add(controls, 'rotArmTop_X', 0, 2*Math.PI).onChange(function (e) {
         pallaCentrale.rotation.y = e;
           });
         gui.add(controls, 'swichLuce').onChange(function (e) {
           spotlight.visible = e;
           lightLamp.visible = e;
           changeSwich();
+          P.castShadow = e;
+          I.castShadow = e;
+          X.castShadow = e;
+          A.castShadow = e;
+          R.castShadow = e;
+          lightLamp.visible = e;
           });
 
         render();
